@@ -11,6 +11,8 @@ public abstract class AbstractPlayer : MonoBehaviour
 
     public Vector2Int CurrentTile { get; private set; }
 
+    public Vector2Int Destination { get; set; }
+
     private int _points = 0;
     public int Points
     {

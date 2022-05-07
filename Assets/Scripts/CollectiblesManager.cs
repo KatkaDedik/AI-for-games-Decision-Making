@@ -17,7 +17,7 @@ public class CollectiblesManager : MonoBehaviour
 
     private float collectiblesIndividualRespawnDelay;
 
-    private AbstractPlayer[] players;
+    public AbstractPlayer[] players;
 
     private int collectiblesToReplace = 0;
 

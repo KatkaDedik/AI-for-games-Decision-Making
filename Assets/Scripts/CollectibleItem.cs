@@ -11,8 +11,8 @@ public enum CollectibleItemType : byte
 
 public class CollectibleItem : MonoBehaviour
 {
-    [SerializeField]
-    private CollectibleItemType type;
+    
+    public CollectibleItemType type;
 
     [SerializeField]
     private SpriteRenderer spriteRenderer;

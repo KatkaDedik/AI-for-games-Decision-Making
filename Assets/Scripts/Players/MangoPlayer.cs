@@ -4,27 +4,33 @@ using UnityEngine;
 
 public class MangoPlayer : ComputerPlayer
 {
+    private Task behaviorTree;
+    private TaskStatus behaviorTreeStatus = TaskStatus.None;
+    private Vector2Int nextPos;
+
+    public void Update()
+    {
+        base.Update();
+    }
+
     public override void OnGameStarted()
     {
         base.OnGameStarted();
+        Sequence sequence = new Sequence();
+        TimeCondition time = new TimeCondition();
+        GetClosestSpeedAction action = new GetClosestSpeedAction();
+        behaviorTree = sequence;
 
+        sequence.AddChildren(time);
+        sequence.AddChildren(action);
+        nextPos = this.CurrentTile;
         // Did you know that Mango is a tree?
     }
 
     protected override void EvaluateDecisions(Maze maze, List<AbstractPlayer> players, List<CollectibleItem> spawnedCollectibles, float remainingGameTime)
     {
-        // TODO Replace with your own code
-
-        if (pathTilesQueue.Count == 0)
-        {
-            for (var i = 0; i < spawnedCollectibles.Count; ++i)
-            {
-                if (Vector2Int.Distance(CurrentTile, spawnedCollectibles[i].TileLocation) <= 1.0f)
-                {
-                    pathTilesQueue.Enqueue(spawnedCollectibles[i].TileLocation);
-                    break;
-                }
-            }
-        }
+        behaviorTreeStatus = behaviorTree.Run(this, null);
     }
+
+
 }
