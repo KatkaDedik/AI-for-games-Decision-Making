@@ -5,7 +5,7 @@ using Priority_Queue;
 public abstract class ComputerPlayer : AbstractPlayer
 {
     public Queue<Vector2Int> pathTilesQueue = new Queue<Vector2Int>();
-
+    public CollectibleItem currentTarget;
 
     public override void OnGameStarted()
     {
@@ -91,7 +91,7 @@ public abstract class ComputerPlayer : AbstractPlayer
         return path;
     }
 
-    private Queue<Vector2Int> ReconstructPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int current, Vector2 start)
+    public Queue<Vector2Int> ReconstructPath(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int current, Vector2 start)
     {
         List<Vector2Int> total_path = new List<Vector2Int>();
         total_path.Add(current);

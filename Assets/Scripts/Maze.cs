@@ -176,6 +176,30 @@ public class Maze : MonoBehaviour
         }
     }
 
+    public CollectibleItem ContainCollectible(Vector2Int position, CollectibleItemType type)
+    {
+        foreach(CollectibleItem item in GameManager.Instance.SpawnedCollectibles)
+        {
+            if (item.type == type && item.TileLocation == position)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public AbstractPlayer ContainPlayer(Vector2Int position)
+    {
+        foreach (AbstractPlayer player in GameManager.Instance.Players)
+        {
+            if (player.CurrentTile == position)
+            {
+                return player;
+            }
+        }
+        return null;
+    }
+
     #region Creation & Initialization of a maze. You can probably ignore this code. :-)
 
     public void BuildMaze()

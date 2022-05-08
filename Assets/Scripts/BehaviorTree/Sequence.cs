@@ -35,6 +35,8 @@ public class Sequence : Task
         if (successCount == children.Count)
         {
             status = TaskStatus.Succes;
+            SetStatus(TaskStatus.Succes, TaskStatus.None);
+            status = TaskStatus.Succes;
         }
         else
         {

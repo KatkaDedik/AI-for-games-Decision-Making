@@ -5,31 +5,59 @@ using UnityEngine;
 public class MangoPlayer : ComputerPlayer
 {
     private Task behaviorTree;
-    private TaskStatus behaviorTreeStatus = TaskStatus.None;
-    private Vector2Int nextPos;
-
-    public void Update()
-    {
-        base.Update();
-    }
-
+    public Vector2Int[] currentPath;
     public override void OnGameStarted()
     {
         base.OnGameStarted();
+
+        Sequence RootSequence = new Sequence();
+        RepeaterUntilFailDecorator repeater = new RepeaterUntilFailDecorator();
+        Selector selector = new Selector();
+
         Sequence sequence = new Sequence();
-        TimeCondition time = new TimeCondition();
-        GetClosestSpeedAction action = new GetClosestSpeedAction();
-        behaviorTree = sequence;
+        
+        TimeCondition time = new TimeCondition(45f);
+        Selector TimeSelector = new Selector();
+
+        FindClosestAction collectSpeed = new FindClosestAction(CollectibleItemType.IncreaseMovementSpeed);
+        FindClosestAction collectReset = new FindClosestAction(CollectibleItemType.RespawnAll);
+        DoNothingAction nothingAction = new DoNothingAction();
+
+        WaitUntilCollectedAction wait = new WaitUntilCollectedAction();
+
+        FindClosestAction collectPoints = new FindClosestAction(CollectibleItemType.AddPoint);
+
+        RootSequence.AddChildren(repeater);
+        RootSequence.AddChildren(selector);
+        RootSequence.AddChildren(wait);
+
+        selector.AddChildren(collectPoints);
+        selector.AddChildren(collectReset);
+        selector.AddChildren(collectSpeed);
+
+        repeater.AddChildren(sequence);
 
         sequence.AddChildren(time);
-        sequence.AddChildren(action);
-        nextPos = this.CurrentTile;
+        sequence.AddChildren(TimeSelector);
+
+        sequence.AddChildren(wait);
+
+        TimeSelector.AddChildren(collectSpeed);
+        TimeSelector.AddChildren(collectReset);
+        TimeSelector.AddChildren(collectPoints);
+        TimeSelector.AddChildren(nothingAction);
+
+        behaviorTree = RootSequence;
+
+        
         // Did you know that Mango is a tree?
     }
 
     protected override void EvaluateDecisions(Maze maze, List<AbstractPlayer> players, List<CollectibleItem> spawnedCollectibles, float remainingGameTime)
     {
-        behaviorTreeStatus = behaviorTree.Run(this, null);
+        behaviorTree.Run(this, null);
+        behaviorTree.SetStatus(TaskStatus.None);
+        currentPath = pathTilesQueue.ToArray();
     }
 
 

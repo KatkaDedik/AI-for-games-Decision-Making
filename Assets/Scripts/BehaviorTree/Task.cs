@@ -28,4 +28,25 @@ public abstract class Task
     {
         children.Add(task);
     }
+
+    public void SetStatus(TaskStatus conditionStatus, TaskStatus to)
+    {
+        if (status == conditionStatus)
+        {
+            status = to;
+            foreach (var child in children)
+            {
+                child.SetStatus(conditionStatus, to);
+            }
+        }
+    }
+    public void SetStatus(TaskStatus to)
+    {
+
+        status = to;
+        foreach (var child in children)
+        {
+            child.SetStatus(to);
+        }
+    }
 }
